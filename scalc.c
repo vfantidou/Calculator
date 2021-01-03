@@ -23,12 +23,15 @@ void client_handler(void *sock){
 	Client newclient;		
 	newclient.sock=*(int*)sock;
 	char *token;
-	int i;	
+	int i=0;	
+	char *calc[3];
+	int x=0,y=0,result=0;
 
 	recvfrom(newclient.sock,newclient.name,50,0,NULL,NULL); 
 	printf("%s is online\n",newclient.name);
-	while(1){
 
+	while(1){
+				
 		if(strcmp(msg,"exit")==0){			
 			printf("%s Left the room\n",newclient.name);
 			clientCount--;
@@ -38,12 +41,41 @@ void client_handler(void *sock){
 			recvfrom(newclient.sock,msg,1024,0,NULL,NULL);	
 		}
 		printf("%s send: %s\n",newclient.name,msg);
-		token= (char*)malloc(10*sizeof(strlen(msg)));
-		token = strtok(msg," "); //o server spaei to string 
+		//token= (char*)malloc(10*sizeof(strlen(msg)));
+		 //o server spaei to string 
 
-//---------Apo edw kai pera variemai na grapsw, pare to vale thn kathe grammh toy token se enan pinaka kai 
-//---------kane atoi to calc[0] kai calc[2] wste na ginoyn int, to calc[1] einai to symvolo, kane polles if 
-//---------me strcmp gia kai ekei ypologise to result kai kane send(newclient.sock, result, sizeof(int), 0);
+//---------ifs.c-------------------------
+		
+		token=strtok(msg," ");
+		do{
+			printf("token: %s\n",token);
+			calc[i]=token;		
+			token=strtok(NULL," ");
+			i++;
+		}while(token!=NULL);
+		i=0;
+		
+		x=atoi(calc[0]);
+		y=atoi(calc[2]);
+		printf("sto 0:%d \nsto 2:%d\n",x,y);
+		
+		if(strcmp(calc[1],"+")==0){
+			result = x+y;
+		}
+		else if(strcmp(calc[1],"-")==0){ //ta dipla "" einai gia string enw ta ' ' gia ena char mono
+			result = x-y;
+		}
+		else if(strcmp(calc[1],"*")==0){
+			result = x*y;
+		}
+		else if(strcmp(calc[1],"/")==0){
+			result = x/y;
+		}
+		printf("result:%d\n",result);
+		send(newclient.sock, &result, sizeof(int), 0);
+		
+		free(token);
+		
 	}
 }
 
