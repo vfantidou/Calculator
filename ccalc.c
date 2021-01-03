@@ -19,7 +19,7 @@ int main(int argc,char *argv[]){
 					
 	addr.sin_family=AF_INET;		//ola ayta einai socket initialization 
 	inet_aton("127.0.0.1",&addr.sin_addr); //localhost
-	addr.sin_port=htons(1111);
+	addr.sin_port=htons(argv[1]);  //sto port poy dinei o xrhsths ./c 1010
 	sock=socket(AF_INET,SOCK_STREAM,0); 
 	connect(sock,(struct sockaddr *)&addr,sizeof(addr));
 	printf("connected, pls give name\n");			//epeidh exeis polloys client o kathenas tha dinei to onoma toy gia na toys ksexvrizei
@@ -38,8 +38,8 @@ int main(int argc,char *argv[]){
         	}
 		else{
 			send(sock, msg, strlen(msg) + 1, 0);//stelneis to string me thn morfh 1 + 1 px me kena kai sthn mesh symvolo
-			//recv(sock, &result, sizeof(int), 0);// pairneis to result apo ton server
-			//printf("%d",result); bgale ta sxolia otan oloklhrvseis ton server
+			recv(sock, &result, sizeof(int), 0);// pairneis to result apo ton server
+			printf("result: %d\n",result); 
 		}
 		
 	}
